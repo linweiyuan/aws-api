@@ -2,7 +2,6 @@ package proxy
 
 import (
 	"crypto/tls"
-	"encoding/base64"
 	"fmt"
 	"net/http"
 	"net/http/cookiejar"
@@ -13,16 +12,6 @@ const (
 	proxyHost = ""
 	proxyPort = 12345
 )
-
-type proxyAuth struct {
-	username string
-	password string
-}
-
-func (p *proxyAuth) basicAuth() string {
-	auth := p.username + ":" + p.password
-	return "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
-}
 
 func getProxyUrl() *url.URL {
 	proxyUrl, _ := url.Parse(fmt.Sprintf("http://%s:%d", proxyHost, proxyPort))
@@ -45,12 +34,12 @@ func NewClient() *http.Client {
 
 func NewClientWithAuth(username, password string) *http.Client {
 	httpClient := NewClient()
-	proxyAuth := &proxyAuth{username, password}
 	httpClient.Transport = &http.Transport{
-		Proxy: http.ProxyURL(getProxyUrl()),
-		ProxyConnectHeader: http.Header{
-			"Proxy-Authorization": []string{proxyAuth.basicAuth()},
-		},
+		Proxy: http.ProxyURL(&url.URL{
+			Scheme: "http",
+			User:   url.UserPassword(username, password),
+			Host:   fmt.Sprintf("%s:%d", proxyHost, proxyPort),
+		}),
 		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: true,
 		},
