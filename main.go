@@ -24,6 +24,7 @@ func main() {
 
 	apiGroup := app.Group("/api")
 	apiGroup.Post("/login", aws.Login)
+	apiGroup.Post("/assume", aws.AssumeRole)
 
 	if err := app.Listen(":" + os.Getenv("APP_PORT")); err != nil {
 		log.Fatal("failed to start service", err.Error())
