@@ -37,7 +37,7 @@ func AssumeRole(c fiber.Ctx) error {
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"message": "failed to parse assume role request"})
 	}
 
-	assumeRoleResponse, err := assumeRoleRequest.assume()
+	assumeRoleResponse, err := assumeRoleRequest.Assume()
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"message": err.Error()})
 	}
@@ -56,7 +56,7 @@ func AssumeRole(c fiber.Ctx) error {
 	})
 }
 
-func (assumeRoleRequest AssumeRoleRequest) assume() (*sts.AssumeRoleWithSAMLOutput, error) {
+func (assumeRoleRequest AssumeRoleRequest) Assume() (*sts.AssumeRoleWithSAMLOutput, error) {
 	staClient := sts.NewFromConfig(aws.Config{
 		Region:     common.RegionAP,
 		HTTPClient: proxy.NewClientWithAuth(assumeRoleRequest.Username, assumeRoleRequest.Password),

@@ -9,6 +9,7 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gofiber/fiber/v3"
+
 	"github.com/linweiyuan/aws-api/internal/proxy"
 )
 
