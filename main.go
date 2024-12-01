@@ -11,7 +11,7 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/recover"
 
 	"github.com/linweiyuan/aws-api/internal/aws"
-	"github.com/linweiyuan/aws-api/internal/db"
+	"github.com/linweiyuan/aws-api/internal/rds"
 )
 
 func main() {
@@ -27,7 +27,7 @@ func main() {
 	apiGroup := app.Group("/api")
 	apiGroup.Post("/login", aws.Login)
 	apiGroup.Post("/assume", aws.AssumeRole)
-	apiGroup.Post("/token", db.GetToken)
+	apiGroup.Post("/token", rds.GetToken)
 
 	if err := app.Listen(":" + os.Getenv("APP_PORT")); err != nil {
 		log.Fatal("failed to start service", err.Error())
