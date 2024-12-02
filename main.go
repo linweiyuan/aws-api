@@ -30,6 +30,7 @@ func main() {
 	apiGroup.Post("/assume", aws.AssumeRole)
 	apiGroup.Post("/token", rds.GetToken)
 	apiGroup.Get("/k8s", k8s.GetToken)
+	apiGroup.Get("/logs/:namespace/:pod/:container", k8s.GetLogs)
 
 	if err := app.Listen(":" + os.Getenv("APP_PORT")); err != nil {
 		log.Fatal("failed to start service", err.Error())
